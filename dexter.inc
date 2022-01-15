@@ -1474,8 +1474,23 @@ stock void ShowStatusMessage(int client = -1, const char[] message = NULL_STRING
 		}
 		else
 		{
-			show_survival_respawn_status.FireToClient(client);
+			if (!IsFakeClient(client))
+				show_survival_respawn_status.FireToClient(client);
 		}
 		show_survival_respawn_status.Cancel();
+	}
+}
+
+stock void ExecuteCommand(int client, const char[] command)
+{
+	if (IsValidClient(client))
+	{
+		int Root = ADMFLAG_ROOT;
+		int FlagBit = GetUserFlagBits(client);
+		AdminId Group = GetUserAdmin(client);
+		SetUserFlagBits(client, Root);
+		FakeClientCommand(client, command);
+		SetUserFlagBits(client, FlagBit);
+		SetUserAdmin(client, Group);
 	}
 } 
