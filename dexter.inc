@@ -1,7 +1,7 @@
-#if defined _pmstocks_included
+#if defined _dexter_included
 #endinput
 #endif
-#define _pmstocks_included
+#define _dexter_included
 
 #define MAX_MESSAGE_LENGTH 		250
 
@@ -15,7 +15,7 @@
 
 #define WEAPON_NOCLIP			-1
 
-#define	MAX_AMMO_TYPES			32
+#define MAX_AMMO_TYPES			32
 #define MAX_AMMO_SLOTS 			32
 
 #define MAX_WEAPON_STING		80
@@ -38,11 +38,11 @@
 #include <sdkhooks>
 
 /*
-** Kullanıcı valid mi diye kontrol eder
-**
-** Example:
-** if (IsValidClient(client, true)
-**/
+ Kullanıcı valid mi diye kontrol eder
+
+ Example:
+ if (IsValidClient(client, true)
+*/
 
 stock bool IsValidClient(int client, bool nobots = true)
 {
@@ -54,11 +54,11 @@ stock bool IsValidClient(int client, bool nobots = true)
 }
 
 /*
-** Entity valid mi diye kontrol eder
-**
-** Example:
-** if (IsValidEnt(ent))
-**/
+ Entity valid mi diye kontrol eder
+
+ Example:
+ if (IsValidEnt(ent))
+*/
 
 stock bool IsValidEnt(int ent)
 {
@@ -70,19 +70,19 @@ stock bool IsValidEnt(int ent)
 }
 
 /*
-** Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
-**
-** Example:
-**	ConVar Test = null;
-**	
-**	public void OnPluginStart()
-**	{
-**	    Test = CreateConVar("sm_flag", "b", "Yetki Harfi");
-**	}
-**	char Flag[8];
-**	Test.GetString(Flag, sizeof(Flag));
-**	if CheckAdminFlag(client, Flag)
-**/
+ Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
+
+ Example:
+	ConVar Test = null;
+	
+	public void OnPluginStart()
+	{
+	    Test = CreateConVar("sm_flag", "b", "Yetki Harfi");
+	}
+	char Flag[8];
+	Test.GetString(Flag, sizeof(Flag));
+	if CheckAdminFlag(client, Flag)
+*/
 
 stock bool CheckAdminFlag(int client, const char[] flags) // Z harfi otomatik erişim verir
 {
@@ -104,19 +104,19 @@ stock bool CheckAdminFlag(int client, const char[] flags) // Z harfi otomatik er
 }
 
 /*
-** Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
-**
-** Example:
-**	ConVar Test = null;
-**	
-**	public void OnPluginStart()
-**	{
-**	    Test = CreateConVar("sm_flag", "z", "Yetki Harfi");
-**	}
-**	char Flag[8];
-**	Test.GetString(Flag, sizeof(Flag));
-**	if CheckAdminFlagEx(client, Flag)
-**/
+ Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
+
+ Example:
+	ConVar Test = null;
+	
+	public void OnPluginStart()
+	{
+	    Test = CreateConVar("sm_flag", "z", "Yetki Harfi");
+	}
+	char Flag[8];
+	Test.GetString(Flag, sizeof(Flag));
+	if CheckAdminFlagEx(client, Flag)
+*/
 
 stock bool CheckAdminFlagEx(int client, const char[] flags) // Z harfine otomatik erişim vermez
 {
@@ -138,9 +138,9 @@ stock bool CheckAdminFlagEx(int client, const char[] flags) // Z harfine otomati
 }
 
 /* Admin olduğunu kontrol etme
-**
-** Example:
-** if (IsPlayerGenericAdmin(client))
+
+ Example:
+ if (IsPlayerGenericAdmin(client))
 */
 
 stock bool IsPlayerGenericAdmin(int client)
@@ -153,9 +153,9 @@ stock bool IsPlayerGenericAdmin(int client)
 }
 
 /* Her hangi bir yetkiye sahip olup olmadığını kontrol etme
-**
-** Example:
-** if (IsPlayerAnyAdmin(client))
+
+ Example:
+ if (IsPlayerAnyAdmin(client))
 */
 
 stock bool IsPlayerAnyAdmin(int client)
@@ -168,8 +168,8 @@ stock bool IsPlayerAnyAdmin(int client)
 }
 
 /* Oyuncu o bayrağa sahip mi diye kontrol eder
-** 
-** if (IsAdminFlags(client))
+ 
+ if (IsAdminFlags(client))
 */
 
 stock bool IsAdminFlags(int client, int flags = ADMFLAG_GENERIC)
@@ -182,11 +182,11 @@ stock bool IsAdminFlags(int client, int flags = ADMFLAG_GENERIC)
 }
 
 /*
-** Gelişmiş bir şekilde silah vermeye yarar, verilen silahın şarjör ve mermisi ayarlanabilir
-**
-** Example:
-** GivePlayerItemAmmo(client, "weapon_deagle", 1, 0);
-**/
+ Gelişmiş bir şekilde silah vermeye yarar, verilen silahın şarjör ve mermisi ayarlanabilir
+
+ Example:
+ GivePlayerItemAmmo(client, "weapon_deagle", 1, 0);
+*/
 
 stock int GivePlayerItemAmmo(int client, const char[] weapon, int clip = -1, int ammo = -1)
 {
@@ -219,11 +219,11 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 }
 
 /*
-** Kullanıcının silahlarını siler
-**
-** Example:
-** ClearWeapon(client);
-**/
+ Kullanıcının silahlarını siler
+
+ Example:
+ ClearWeapon(client);
+*/
 
 stock void ClearWeapon(int client)
 {
@@ -239,11 +239,11 @@ stock void ClearWeapon(int client)
 }
 
 /*
-** Kullanıcının silahlarını siler
-**
-** Example:
-** ClearWeaponEx(client);
-**/
+ Kullanıcının silahlarını siler
+
+ Example:
+ ClearWeaponEx(client);
+*/
 
 stock void ClearWeaponEx(int client)
 {
@@ -259,11 +259,11 @@ stock void ClearWeaponEx(int client)
 }
 
 /*
-** ConVar değişikliği yapar
-**
-** Example:
-** SetCvar("mp_roundtime", 60);
-**/
+ ConVar değişikliği yapar
+
+ Example:
+ SetCvar("mp_roundtime", 60);
+*/
 
 stock void SetCvar(char[] cvarName, int value)
 {
@@ -278,11 +278,11 @@ stock void SetCvar(char[] cvarName, int value)
 }
 
 /*
-** ConVar değişikliği yapar
-**
-** Example:
-** SetCvar("mp_roundtime", 60.0);
-**/
+ ConVar değişikliği yapar
+
+ Example:
+ SetCvar("mp_roundtime", 60.0);
+*/
 
 stock void SetCvarFloat(char[] cvarName, float value)
 {
@@ -297,11 +297,11 @@ stock void SetCvarFloat(char[] cvarName, float value)
 }
 
 /*
-** ConVar değişikliği yapar
-**
-** Example:
-** SetCvar("mp_roundtime", "60");
-**/
+ ConVar değişikliği yapar
+
+ Example:
+ SetCvar("mp_roundtime", "60");
+*/
 
 stock void SetCvarString(char[] cvarName, char[] value)
 {
@@ -316,11 +316,11 @@ stock void SetCvarString(char[] cvarName, char[] value)
 }
 
 /*
-** Bir timer hızlı bir şekilde durdurmaya yarar
-**
-** Example:
-** StopTimer(timer);
-**/
+ Bir timer hızlı bir şekilde durdurmaya yarar
+
+ Example:
+ StopTimer(timer);
+*/
 
 stock void StopTimer(Handle &timer)
 {
@@ -332,11 +332,11 @@ stock void StopTimer(Handle &timer)
 }
 
 /*
-** Kullanıcının ekranını renklendirir
-**
-** Example:
-** ScreenColor(client, Color);
-**/
+ Kullanıcının ekranını renklendirir
+
+ Example:
+ ScreenColor(client, Color);
+*/
 
 stock void ScreenColor(int client, int Color[4])
 {
@@ -352,11 +352,11 @@ stock void ScreenColor(int client, int Color[4])
 }
 
 /*
-** Kullanıcının açıkta duran menüsünü kapatır
-**
-** Example:
-** CloseClientMenu(client);
-**/
+ Kullanıcının açıkta duran menüsünü kapatır
+
+ Example:
+ CloseClientMenu(client);
+*/
 
 stock int CloseClientMenu(int client) // Oyuncuların mevcutta açık olan menüsünü iptal ettirmeye yarar.
 {
@@ -374,11 +374,11 @@ public int ClientMenu_Close(Menu Menu_CCM, MenuAction action, int Client, int Cl
 }
 
 /*
-** Kullanıcının hızını arttırır, hızı arttırmak oyuncunun gravitysinide bozar!
-**
-** Example:
-** SetEntitySpeed(client, 3.1);
-**/
+ Kullanıcının hızını arttırır, hızı arttırmak oyuncunun gravitysinide bozar!
+
+ Example:
+ SetEntitySpeed(client, 3.1);
+*/
 
 stock void SetEntitySpeed(int entity, float speed = 1.0)
 {
@@ -386,11 +386,11 @@ stock void SetEntitySpeed(int entity, float speed = 1.0)
 }
 
 /*
-** Kullanıcının god modunu değiştirir
-**
-** Example:
-** SetClientGod(client, false);
-**/
+ Kullanıcının god modunu değiştirir
+
+ Example:
+ SetClientGod(client, false);
+*/
 
 stock void SetClientGod(int client, bool god)
 {
@@ -401,10 +401,10 @@ stock void SetClientGod(int client, bool god)
 }
 
 /*
-** Kullanıcıların armorlarını kaldırır
-**
-** Example:
-** ResetArmor(client)
+ Kullanıcıların armorlarını kaldırır
+
+ Example:
+ ResetArmor(client)
 */
 
 stock void ResetArmor(int client)
@@ -422,11 +422,11 @@ stock void ResetArmor(int client)
 }
 
 /*
-** Kullanıcıların armor değerini değiştirir
-**
-** Example:
-** SetClientArmor(client, 31);
-**/
+ Kullanıcıların armor değerini değiştirir
+
+ Example:
+ SetClientArmor(client, 31);
+*/
 
 stock void SetClientArmor(int client, int amount)
 {
@@ -440,11 +440,11 @@ stock void SetClientArmor(int client, int amount)
 }
 
 /*
-** Kullanıcıların kasklarını alır / verir
-**
-** Example:
-** SetClientHelmet(client, true);
-**/
+ Kullanıcıların kasklarını alır / verir
+
+ Example:
+ SetClientHelmet(client, true);
+*/
 
 stock void SetClientHelmet(int client, bool value)
 {
@@ -458,11 +458,11 @@ stock void SetClientHelmet(int client, bool value)
 }
 
 /*
-** Bir ses dosyasını precache alıp indirme listesine ekler tek satırda
-**
-** Example:
-** PrecacheSoundAnyDownload("bydexter/test/sound.mp3");
-**/
+ Bir ses dosyasını precache alıp indirme listesine ekler tek satırda
+
+ Example:
+ PrecacheSoundAnyDownload("bydexter/test/sound.mp3");
+*/
 
 stock void PrecacheSoundAnyDownload(const char[] sSound)
 {
@@ -473,11 +473,11 @@ stock void PrecacheSoundAnyDownload(const char[] sSound)
 }
 
 /*
-** Bir materyal dosyasını precache alıp indirme listesine ekler tek satırda
-**
-** Example:
-** PrecacheDecalAnyDownload("bydexter/test/decal");
-**/
+ Bir materyal dosyasını precache alıp indirme listesine ekler tek satırda
+
+ Example:
+ PrecacheDecalAnyDownload("bydexter/test/decal");
+*/
 
 stock void PrecacheDecalAnyDownload(char[] sOverlay)
 {
@@ -494,12 +494,12 @@ stock void PrecacheDecalAnyDownload(char[] sOverlay)
 }
 
 /*
-** Isınma turunu kontrol eder
-**
-** Example:
-** if (InWarmup)
-** PrintToChatAll("Isınma devam ediyor!");
-**/
+ Isınma turunu kontrol eder
+
+ Example:
+ if (InWarmup)
+ PrintToChatAll("Isınma devam ediyor!");
+*/
 
 stock bool InWarmup()
 {
@@ -507,7 +507,7 @@ stock bool InWarmup()
 }
 
 /*
-** Isınma turunu başlatır
+ Isınma turunu başlatır
 */
 
 stock void StartWarmup(int IsinmaSure = 60)
@@ -518,7 +518,7 @@ stock void StartWarmup(int IsinmaSure = 60)
 }
 
 /*
-** Isınma turunu bitirir
+ Isınma turunu bitirir
 */
 
 stock void EndWarmup()
@@ -527,12 +527,12 @@ stock void EndWarmup()
 }
 
 /*
-** Isınma turunu kontrol eder
-**
-** Example:
-** if (InWarmup)
-** PrintToChatAll("Mola devam ediyor!");
-**/
+ Isınma turunu kontrol eder
+
+ Example:
+ if (InWarmup)
+ PrintToChatAll("Mola devam ediyor!");
+*/
 
 stock bool InPaused()
 {
@@ -540,7 +540,7 @@ stock bool InPaused()
 }
 
 /*
-** Molayı bitirir
+ Molayı bitirir
 */
 
 stock void ValvePause()
@@ -549,7 +549,7 @@ stock void ValvePause()
 }
 
 /*
-** Mola başlatır
+ Mola başlatır
 */
 
 stock void ValveUnpause()
@@ -558,11 +558,11 @@ stock void ValveUnpause()
 }
 
 /*
-** Kullanıcıya overlay gösterir
-**
-** Example:
-** ShowOverlayToClient(client, "dexter/overlay/test", 0.0);
-**/
+ Kullanıcıya overlay gösterir
+
+ Example:
+ ShowOverlayToClient(client, "dexter/overlay/test", 0.0);
+*/
 
 stock void ShowOverlayToClient(int client, const char[] overlaypath)
 {
@@ -570,11 +570,11 @@ stock void ShowOverlayToClient(int client, const char[] overlaypath)
 }
 
 /*
-** Kullanıcılara overlay gösterir
-**
-** Example:
-** ShowOverlayToAll("dexter/overlay/test");
-**/
+ Kullanıcılara overlay gösterir
+
+ Example:
+ ShowOverlayToAll("dexter/overlay/test");
+*/
 
 stock void ShowOverlayToAll(const char[] overlaypath)
 {
@@ -588,11 +588,11 @@ stock void ShowOverlayToAll(const char[] overlaypath)
 }
 
 /*
-** Kullanıcılara gösterlen overlayı siler
-**
-** Example:
-** DeleteOverlay(client);
-**/
+ Kullanıcılara gösterlen overlayı siler
+
+ Example:
+ DeleteOverlay(client);
+*/
 
 stock void DeleteOverlay(int client)
 {
@@ -600,21 +600,21 @@ stock void DeleteOverlay(int client)
 }
 
 /*
-** Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
-**
-** Example:
-** int g_CollisionGroup = -1;
-** public void OnPluginStart()
-**	{
-**		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-**		if (g_CollisionGroup == -1)
-**		{
-**			SetFailState("Unable to find offset for collision groups.");
-**		}
-**	}
-**
-** BlockEntity(client, g_CollisionGroup);
-**/
+ Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
+
+ Example:
+ int g_CollisionGroup = -1;
+ public void OnPluginStart()
+	{
+		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+		if (g_CollisionGroup == -1)
+		{
+			SetFailState("Unable to find offset for collision groups.");
+		}
+	}
+
+ BlockEntity(client, g_CollisionGroup);
+*/
 
 stock void BlockEntity(int client, int cachedOffset)
 {
@@ -622,21 +622,21 @@ stock void BlockEntity(int client, int cachedOffset)
 }
 
 /*
-** Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
-**
-** Example:
-** int g_CollisionGroup = -1;
-** public void OnPluginStart()
-**	{
-**		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-**		if (g_CollisionGroup == -1)
-**		{
-**			SetFailState("Unable to find offset for collision groups.");
-**		}
-**	}
-**
-** UnblockEntity(client, g_CollisionGroup);
-**/
+ Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
+
+ Example:
+ int g_CollisionGroup = -1;
+ public void OnPluginStart()
+	{
+		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+		if (g_CollisionGroup == -1)
+		{
+			SetFailState("Unable to find offset for collision groups.");
+		}
+	}
+
+ UnblockEntity(client, g_CollisionGroup);
+*/
 
 stock void UnblockEntity(int client, int cachedOffset)
 {
@@ -644,11 +644,11 @@ stock void UnblockEntity(int client, int cachedOffset)
 }
 
 /*
-** Yerdeki silahları temizler
-**
-** Example:
-** YerdekiSilahlariSil();
-**/
+ Yerdeki silahları temizler
+
+ Example:
+ YerdekiSilahlariSil();
+*/
 
 stock void GroundWeaponClear()
 {
@@ -667,16 +667,16 @@ stock void GroundWeaponClear()
 }
 
 /*
-** Modelleri kaydeder quantum güncelle artık abiiiii
-**
-** Example:
-** Handle g_Model;
-** public void OnPluginStart()
-** {
-**	g_Model = RegClientCookie("cookiezımbırtısı", "Oyuncuların modellerinin saklandığı cookie", CookieAccess_Protected);
-** }
-** ModelKaydet(client);
-**/
+ Modelleri kaydeder quantum güncelle artık abiiiii
+
+ Example:
+ Handle g_Model;
+ public void OnPluginStart()
+ {
+	g_Model = RegClientCookie("cookiezımbırtısı", "Oyuncuların modellerinin saklandığı cookie", CookieAccess_Protected);
+ }
+ ModelKaydet(client);
+*/
 
 stock void ModelKaydet(int client)
 {
@@ -686,11 +686,11 @@ stock void ModelKaydet(int client)
 }
 
 /*
-** Kaydedilen modelleri verir.
-**
-** Example:
-** ModelVer(client);
-**/
+ Kaydedilen modelleri verir.
+
+ Example:
+ ModelVer(client);
+*/
 
 stock void ModelVer(int client)
 {
@@ -700,11 +700,11 @@ stock void ModelVer(int client)
 }
 
 /*
-** Ekran titretme
-**
-** Example:
-** EkranTitreme(client, 5.0, 9000.0, 7.0, 40.0);
-**/
+ Ekran titretme
+
+ Example:
+ EkranTitreme(client, 5.0, 9000.0, 7.0, 40.0);
+*/
 
 stock void EkranTitreme(int client, float Amplitude, float Radius, float Duration, float Frequency)
 {
@@ -727,9 +727,9 @@ stock void EkranTitreme(int client, float Amplitude, float Radius, float Duratio
 }
 
 /* Sunucu Otomatik zıplama ayarlama
-**
-** Example:
-** BunnyAyarla(true);
+
+ Example:
+ BunnyAyarla(true);
 */
 
 stock void BunnyAyarla(bool Durum)
@@ -757,9 +757,9 @@ stock void BunnyAyarla(bool Durum)
 }
 
 /* Silah Tepmesini ayarlama
-**
-** Example:
-** SekmemeAyarla(true);
+
+ Example:
+ SekmemeAyarla(true);
 */
 
 stock void SekmemeAyarla(bool Durum)
@@ -789,9 +789,9 @@ stock void SekmemeAyarla(bool Durum)
 }
 
 /* Dost Ateşi ayarlama
-**
-** Example:
-** FFAyarla(true);
+
+ Example:
+ FFAyarla(true);
 */
 
 stock void FFAyarla(bool Durum)
@@ -809,9 +809,9 @@ stock void FFAyarla(bool Durum)
 }
 
 /* Lazer çekme
-**
-** Example:
-** DrawLaser("BulletBeam", startX, startY, startZ, endX, endY, endZ, "255 0 128");
+
+ Example:
+ DrawLaser("BulletBeam", startX, startY, startZ, endX, endY, endZ, "255 0 128");
 */
 
 stock bool DrawLaser(char[] name, float startX, float startY, float startZ, float endX, float endY, float endZ, char[] color)
@@ -852,9 +852,9 @@ stock bool DrawLaser(char[] name, float startX, float startY, float startZ, floa
 }
 
 /* Kullanıcının duvara bakıp bakmadığını kontrol eder
-**
-** Example:
-** if (IsLookingAtWall(client, 100.0))
+
+ Example:
+ if (IsLookingAtWall(client, 100.0))
 */
 
 stock bool IsLookingAtWall(int client, float distance = 40.0) {
@@ -896,9 +896,9 @@ public bool LookingWall_TraceEntityFilter(int entity, int contentsMask)
 //Üsttekiyle birleşik
 
 /* Özel Hasar verdirme
-**
-** Example:
-** DealDamage(victim, 200, attacker, DMG_GENERIC, "weapon_awp");
+
+ Example:
+ DealDamage(victim, 200, attacker, DMG_GENERIC, "weapon_awp");
 */
 
 stock void DealDamage(int nClientVictim, int nDamage, int nClientAttacker = 0, int nDamageType = DMG_GENERIC, char sWeapon[] = "")
@@ -934,12 +934,12 @@ stock void DealDamage(int nClientVictim, int nDamage, int nClientAttacker = 0, i
 }
 
 /*
-** Rastgele bir oyuncu çeker
-**
-** Example:
-** int XX = GetRandomPlayer(CS_TEAM_T, false);
-** PrintToChatAll("[SM] Lucky Player: %N", XX);
-**/
+ Rastgele bir oyuncu çeker
+
+ Example:
+ int XX = GetRandomPlayer(CS_TEAM_T, false);
+ PrintToChatAll("[SM] Lucky Player: %N", XX);
+*/
 
 stock int GetRandomPlayer(int team = -1, bool OnlyAlive = false)
 {
@@ -956,9 +956,9 @@ stock int GetRandomPlayer(int team = -1, bool OnlyAlive = false)
 }
 
 /* T'de Yaşayan kontrol ettirmek
-** 
-** Example:
-** int TAlive = GetAliveT();
+ 
+ Example:
+ int TAlive = GetAliveT();
 */
 
 stock int GetAliveT()
@@ -975,9 +975,9 @@ stock int GetAliveT()
 }
 
 /* CT'de Yaşayan kontrol ettirmek
-** 
-** Example:
-** int CTAlive = GetAliveCT();
+ 
+ Example:
+ int CTAlive = GetAliveCT();
 */
 
 stock int GetAliveCT()
@@ -994,9 +994,9 @@ stock int GetAliveCT()
 }
 
 /* Takımda Kaç kişi var
-** 
-** Example:
-** int Player = GetCountTeam(2);
+ 
+ Example:
+ int Player = GetCountTeam(2);
 */
 
 stock int GetCountTeam(int team = -1)
@@ -1016,9 +1016,9 @@ stock int GetCountTeam(int team = -1)
 }
 
 /* Log dosyası belirleme
-** 
-** Example:
-** SetLogFile(path, "Command", "Admin");
+ 
+ Example:
+ SetLogFile(path, "Command", "Admin");
 */
 
 stock void SetLogFile(char path[PLATFORM_MAX_PATH], char[] file, char[] folder)
@@ -1031,9 +1031,9 @@ stock void SetLogFile(char path[PLATFORM_MAX_PATH], char[] file, char[] folder)
 }
 
 /* Öldürme sayısı belirleme
-**
-** Example:
-** SetClientFrags(client, 1);
+
+ Example:
+ SetClientFrags(client, 1);
 */
 
 stock void SetClientFrags(int client, int val = 0)
@@ -1042,9 +1042,9 @@ stock void SetClientFrags(int client, int val = 0)
 }
 
 /* Ölme sayısı belirleme
-**
-** Example:
-** SetClientDeaths(client, 1);
+
+ Example:
+ SetClientDeaths(client, 1);
 */
 
 stock void SetClientDeaths(int client, int val = 0)
@@ -1053,9 +1053,9 @@ stock void SetClientDeaths(int client, int val = 0)
 }
 
 /* Parayı belirleme
-**
-** Example:
-** SetClientMoney(client, 16000);
+
+ Example:
+ SetClientMoney(client, 16000);
 */
 
 stock void SetClientMoney(int client, int val = 800)
@@ -1166,9 +1166,9 @@ stock void StringToUpper(const char[] input, char[] output, int size)
 }
 
 /* Kullanıcı merdivende mi diye kontrol eder
-**
-** Example:
-** if (IsOnLadder(client))
+
+ Example:
+ if (IsOnLadder(client))
 */
 
 stock bool IsOnLadder(int client)
@@ -1184,9 +1184,9 @@ stock bool IsOnLadder(int client)
 }
 
 /* Oyuncunun koşunmasını düzeltir
-**
-** Example:
-** UnMute(client);
+
+ Example:
+ UnMute(client);
 */
 
 stock void UnMute(int client)
@@ -1214,9 +1214,9 @@ stock void UnMute(int client)
 }
 
 /* Oyuncunun susturur
-**
-** Example:
-** Mute(client);
+
+ Example:
+ Mute(client);
 */
 
 stock void Mute(int client)
@@ -1225,9 +1225,9 @@ stock void Mute(int client)
 }
 
 /* Oyuncu susturulmuş mu diye kontrol eder
-**
-** Example:
-** if (IsMuted(client))
+
+ Example:
+ if (IsMuted(client))
 */
 
 stock bool IsMuted(int client)
@@ -1236,7 +1236,7 @@ stock bool IsMuted(int client)
 }
 
 /*
-** ConVar'ın flagını kontrol eder
+ ConVar'ın flagını kontrol eder
 */
 
 stock bool ConVar_HasFlags(ConVar convar, int flags)
@@ -1245,7 +1245,7 @@ stock bool ConVar_HasFlags(ConVar convar, int flags)
 }
 
 /*
-** ConVar'ın flagını ayarlar
+ ConVar'ın flagını ayarlar
 */
 
 stock void ConVar_AddFlags(ConVar convar, int flags)
@@ -1256,7 +1256,7 @@ stock void ConVar_AddFlags(ConVar convar, int flags)
 }
 
 /*
-** ConVar'ın flagını siler
+ ConVar'ın flagını siler
 */
 
 stock void ConVar_RemoveFlags(ConVar convar, int flags)
@@ -1267,9 +1267,9 @@ stock void ConVar_RemoveFlags(ConVar convar, int flags)
 }
 
 /* Takımın ismini değiştirir
-**
-** Example:
-** TeamSetName(2, "Eternal Fire");
+
+ Example:
+ TeamSetName(2, "Eternal Fire");
 */
 
 stock bool TeamSetName(int index, const char[] name)
@@ -1287,7 +1287,7 @@ stock bool TeamSetName(int index, const char[] name)
 }
 
 /* Takımın skorunu çeker
-**
+
 */
 
 stock int TeamGetScore(int index)
@@ -1302,7 +1302,7 @@ stock int TeamGetScore(int index)
 }
 
 /* Takımın skorunu ayarlar
-**
+
 */
 
 stock bool TeamSetScore(int index, int score)
@@ -1437,13 +1437,13 @@ stock void PrecacheAndMaterialDownloader(char[] sMaterialname)
 }
 
 /*
-** Harita ışığını değiştirme
-**
-** 0 -> Normal
-** 1 -> Simsiyah
-** 2 -> Karanlık
-** 3 -> Karamsar
-**/
+ Harita ışığını değiştirme
+
+ 0 -> Normal
+ 1 -> Simsiyah
+ 2 -> Karanlık
+ 3 -> Karamsar
+*/
 
 stock void LightChange(int Seviye = 0)
 {
@@ -1456,6 +1456,10 @@ stock void LightChange(int Seviye = 0)
 	else if (Seviye == 3)
 		SetLightStyle(0, "c");
 }
+
+/*
+ Oyuncuların ekranına hud gönderir
+*/
 
 stock void ShowStatusMessage(int client = -1, const char[] message = NULL_STRING, int hold = 1)
 {
@@ -1481,6 +1485,10 @@ stock void ShowStatusMessage(int client = -1, const char[] message = NULL_STRING
 	}
 }
 
+/*
+ Oyuncuya komut uygulatma, yetkisiz ise yetkililere ait bir komutuda gönderebilir.
+*/
+
 stock void ExecuteCommand(int client, const char[] command)
 {
 	if (IsValidClient(client))
@@ -1492,5 +1500,29 @@ stock void ExecuteCommand(int client, const char[] command)
 		FakeClientCommand(client, command);
 		SetUserFlagBits(client, FlagBit);
 		SetUserAdmin(client, Group);
+	}
+}
+
+/*
+ Oyuncunun kredisini alıp verme
+*/
+
+stock void Zephstore_GiveCredits(int client, int kredi)
+{
+	if (IsValidClient(client))
+	{
+		int userid = GetClientUserId(client);
+		if (CommandExists("sm_givecredits"))
+		{
+			ServerCommand("sm_givecredits #%d %d", userid, kredi);
+		}
+		else if (CommandExists("sm_krediver"))
+		{
+			ServerCommand("sm_krediver #%d %d", userid, kredi);
+		}
+		else
+		{
+			PrintToServer("Kredi verme komutu bulunamadı.");
+		}
 	}
 } 
