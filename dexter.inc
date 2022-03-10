@@ -1365,12 +1365,22 @@ stock bool GetMenuBool(Menu menu, int param2)
 	return GetMenuInt(menu, param2) != 0;
 }
 
+/*
+ Kurabiyeleri int değerinde vermek için
+ SetCookieInt(client, g_cookie, 3);
+*/
+
 stock void SetCookieInt(int client, Handle cookie, int value)
 {
 	char buffer[MAX_INTEGER_STRING_LENGTH];
 	FormatEx(buffer, sizeof(buffer), "%d", value);
 	SetClientCookie(client, cookie, buffer);
 }
+
+/*
+ Kurabiyeleri int değerinde çekmek için
+ GetCookieInt(client, g_cookie, 0);
+*/
 
 stock int GetCookieInt(int client, Handle cookie, int defaultValue = 0)
 {
@@ -1383,12 +1393,22 @@ stock int GetCookieInt(int client, Handle cookie, int defaultValue = 0)
 	return StringToInt(buffer);
 }
 
+/*
+ Kurabiyeleri Float değerinde vermek için
+ SetCookieFloat(client, g_cookie, 1.0);
+*/
+
 stock void SetCookieFloat(int client, Handle cookie, float value)
 {
 	char buffer[MAX_FLOAT_STRING_LENGTH];
 	FormatEx(buffer, sizeof(buffer), "%f", value);
 	SetClientCookie(client, cookie, buffer);
 }
+
+/*
+ Kurabiyeleri Float değerinde çekmek için
+ GetCookieFloat(client, g_cookie, 0.0);
+*/
 
 stock float GetCookieFloat(int client, Handle cookie, float defaultValue = 0.0)
 {
@@ -1400,6 +1420,11 @@ stock float GetCookieFloat(int client, Handle cookie, float defaultValue = 0.0)
 	
 	return StringToFloat(buffer);
 }
+
+/*
+ Hızlı Precache ve download modeller için
+ PrecacheAndMaterialDownloader("weapons/ByDexter/knife/garen-sword/v_knife");
+*/
 
 stock void PrecacheAndModelDownloader(char[] sModelname)
 {
@@ -1415,6 +1440,11 @@ stock void PrecacheAndModelDownloader(char[] sModelname)
 	AddFileToDownloadsTable(sBuffer);
 }
 
+/*
+ Hızlı Precache ve download phy dosyası olmayan modeller için
+ PrecacheAndMaterialDownloader("weapons/ByDexter/knife/garen-sword/v_knife");
+*/
+
 stock void PrecacheAndModelDownloaderEx(char[] sModelname)
 {
 	char sBuffer[PLATFORM_MAX_PATH];
@@ -1426,6 +1456,11 @@ stock void PrecacheAndModelDownloaderEx(char[] sModelname)
 	Format(sBuffer, sizeof(sBuffer), "models/%s.vvd", sModelname);
 	AddFileToDownloadsTable(sBuffer);
 }
+
+/*
+ Hızlı Precache ve download materyal için
+ PrecacheAndMaterialDownloader("models/ByDexter/weapons/knife/garen-sword/sword");
+*/
 
 stock void PrecacheAndMaterialDownloader(char[] sMaterialname)
 {
@@ -1443,6 +1478,11 @@ stock void PrecacheAndMaterialDownloader(char[] sMaterialname)
  1 -> Simsiyah
  2 -> Karanlık
  3 -> Karamsar
+ 
+ public void OnMapStart()
+ {
+ 	LightChange(0);
+ }
 */
 
 stock void LightChange(int Seviye = 0)
