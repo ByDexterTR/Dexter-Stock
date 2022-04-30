@@ -561,12 +561,13 @@ stock void ValveUnpause()
  Kullanıcıya overlay gösterir
 
  Example:
- ShowOverlayToClient(client, "dexter/overlay/test", 0.0);
+ ShowOverlayToClient(client, "dexter/overlay/test");
 */
 
-stock void ShowOverlayToClient(int client, const char[] overlaypath)
+stock void ShowOverlayToClient(int client, const char[] overlaypath, float life = 0.0)
 {
 	ClientCommand(client, "r_screenoverlay \"%s\"", overlaypath);
+	CreateTimer(lifetime, DeleteOverlay, GetClientUserId(i));
 }
 
 /*
@@ -576,13 +577,13 @@ stock void ShowOverlayToClient(int client, const char[] overlaypath)
  ShowOverlayToAll("dexter/overlay/test");
 */
 
-stock void ShowOverlayToAll(const char[] overlaypath)
+stock void ShowOverlayToAll(const char[] overlaypath, float life = 0.0)
 {
 	for (int x = 1; x <= MaxClients; x++)
 	{
 		if (IsValidClient(x, false, true))
 		{
-			ShowOverlayToClient(x, overlaypath);
+			ShowOverlayToClient(x, overlaypath, life);
 		}
 	}
 }
@@ -594,53 +595,40 @@ stock void ShowOverlayToAll(const char[] overlaypath)
  DeleteOverlay(client);
 */
 
-stock void DeleteOverlay(int client)
+stock Action DeleteOverlay(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+	
+	if (!IsValidClient(client))
+		return Plugin_Stop;
+	
 	ClientCommand(client, "r_screenoverlay \"\"");
+	
+	return Plugin_Stop;
 }
 
 /*
  Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
 
  Example:
- int g_CollisionGroup = -1;
- public void OnPluginStart()
-	{
-		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-		if (g_CollisionGroup == -1)
-		{
-			SetFailState("Unable to find offset for collision groups.");
-		}
-	}
-
  BlockEntity(client, g_CollisionGroup);
 */
 
 stock void BlockEntity(int client, int cachedOffset)
 {
-	SetEntData(client, cachedOffset, 5, 4, true);
+	SetEntProp(client, Prop_Data, "m_CollisionGroup", 5);
 }
 
 /*
  Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
 
  Example:
- int g_CollisionGroup = -1;
- public void OnPluginStart()
-	{
-		g_CollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-		if (g_CollisionGroup == -1)
-		{
-			SetFailState("Unable to find offset for collision groups.");
-		}
-	}
-
- UnblockEntity(client, g_CollisionGroup);
+ UnblockEntity(client);
 */
 
-stock void UnblockEntity(int client, int cachedOffset)
+stock void UnblockEntity(int client)
 {
-	SetEntData(client, cachedOffset, 2, 4, true);
+	SetEntProp(client, Prop_Data, "m_CollisionGroup", 2);
 }
 
 /*
@@ -1289,7 +1277,7 @@ stock bool TeamSetName(int index, const char[] name)
 /* Takımın skorunu çeker
 
 */
-
+GetTeamScore()
 stock int TeamGetScore(int index)
 {
 	int edict = Team_GetEdict(index);
@@ -1478,6 +1466,7 @@ stock void PrecacheAndMaterialDownloader(char[] sMaterialname)
  1 -> Simsiyah
  2 -> Karanlık
  3 -> Karamsar
+ 4 -> Aydınlık
  
  public void OnMapStart()
  {
@@ -1495,6 +1484,8 @@ stock void LightChange(int Seviye = 0)
 		SetLightStyle(0, "b");
 	else if (Seviye == 3)
 		SetLightStyle(0, "c");
+	else
+		SetLightStyle(0, "z");
 }
 
 /*
@@ -1565,4 +1556,20 @@ stock void Zephstore_GiveCredits(int client, int kredi)
 			PrintToServer("Kredi verme komutu bulunamadı.");
 		}
 	}
+}
+
+stock bool DirExistsEx(const char[] path)
+{
+	if (!DirExists(path))
+	{
+		CreateDirectory(path, 511);
+		
+		if (!DirExists(path))
+		{
+			LogError("Couldn't create folder! (%s)", path);
+			return false;
+		}
+	}
+	
+	return true;
 } 
