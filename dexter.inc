@@ -22,6 +22,27 @@
 #define MAX_WEAPON_PREFIX		16
 #define MAX_WEAPON_AMMO_NAME	32
 
+#define MAX_EDICTS      2048
+#define MAX_ENTITIES    4096
+
+#define CVAR_LENGTH 128
+
+#define MAX_CVARS 128
+
+#define HIDEHUD_WEAPONSELECTION     (1 << 0)
+#define HIDEHUD_FLASHLIGHT          (1 << 1)
+#define HIDEHUD_ALL                 (1 << 2)
+#define HIDEHUD_HEALTH              (1 << 3)	
+#define HIDEHUD_PLAYERDEAD          (1 << 4)
+#define HIDEHUD_NEEDSUIT            (1 << 5)
+#define HIDEHUD_MISCSTATUS          (1 << 6)
+#define HIDEHUD_CHAT                (1 << 7)
+#define HIDEHUD_CROSSHAIR           (1 << 8)
+#define HIDEHUD_VEHICLE_CROSSHAIR   (1 << 9)
+#define HIDEHUD_INVEHICLE           (1 << 10)
+#define HIDEHUD_BONUS_PROGRESS      (1 << 11)
+#define HIDEHUD_BITCOUNT            12
+
 #define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
 #define LoopClientsT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == CS_TEAM_T)
 #define LoopClientsCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == CS_TEAM_CT)
@@ -1277,7 +1298,6 @@ stock bool TeamSetName(int index, const char[] name)
 /* Takımın skorunu çeker
 
 */
-GetTeamScore()
 stock int TeamGetScore(int index)
 {
 	int edict = Team_GetEdict(index);
@@ -1572,4 +1592,99 @@ stock bool DirExistsEx(const char[] path)
 	}
 	
 	return true;
+}
+
+stock bool IsConVarDefault(ConVar convar)
+{
+	char sDefaultVal[16], sCurrentVal[16];
+	GetConVarDefault(convar, sDefaultVal, sizeof(sDefaultVal));
+	GetConVarString(convar, sCurrentVal, sizeof(sCurrentVal));
+	
+	return StrEqual(sDefaultVal, sCurrentVal);
+}
+
+stock bool GetClientAbsVelocity(int client, float velocity[3])
+{
+	static int offset = -1;
+	
+	if (offset == -1 && (offset = FindDataMapInfo(client, "m_vecAbsVelocity")) == -1)
+	{
+		ZeroVector(velocity);
+		return false;
+	}
+	
+	GetEntDataVector(client, offset, velocity);
+	return true;
+}
+
+stock int GetClientHudFlags(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_iHideHUD");
+}
+
+stock void ZeroVector(float vec[3])
+{
+	vec[0] = vec[1] = vec[2] = 0.0;
+}
+
+stock bool IsVectorZero(const float vec[3])
+{
+	return vec[0] == 0.0 && vec[1] == 0.0 && vec[2] == 0.0;
+}
+
+stock any MinValue(any value, any min)
+{
+	return (value < min) ? min : value;
+}
+
+stock any MaxValue(any value, any max)
+{
+	return (value > max) ? max : value;
+}
+
+stock int GetFov(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_iFOV");
+}
+
+stock void SetFov(int client, int fov)
+{
+	SetEntProp(client, Prop_Send, "m_iFOV", fov);
+}
+
+stock bool WriteNavMesh(const char[] map, bool skipExistsCheck = false)
+{
+	char sTempMap[PLATFORM_MAX_PATH];
+	FormatEx(sTempMap, PLATFORM_MAX_PATH, "maps/%s.nav", map);
+	
+	if (skipExistsCheck || !FileExists(sTempMap))
+	{
+		File file = OpenFile(sTempMap, "wb");
+		
+		if (file != null)
+		{
+			static int defaultNavMesh[205] = {
+				0xCE, 0xFA, 0xED, 0xFE, 0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x58, 0xF6, 0x01, 0x00, 
+				0x01, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				0x00, 0x80, 0xED, 0xC3, 0x00, 0x00, 0x48, 0x42, 0xFF, 0x1F, 0x00, 0x42, 0x00, 0x00, 0x48, 0xC2, 
+				0x00, 0x80, 0xED, 0x43, 0xFF, 0x1F, 0x00, 0x42, 0xFF, 0x1F, 0x00, 0x42, 0xFF, 0x1F, 0x00, 0x42, 
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xE7, 0xC3, 0x00, 0x00, 0x7A, 0x42, 0xFF, 0x1F, 0x00, 
+				0x42, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7A, 0xC2, 0x00, 0x00, 0x7A, 0x42, 0xFF, 0x1F, 
+				0x00, 0x42, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7A, 0xC2, 0x00, 0x40, 0xE7, 0x43, 0xFF, 
+				0x1F, 0x00, 0x42, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x40, 0xE7, 0xC3, 0x00, 0x40, 0xE7, 0x43, 
+				0xFF, 0x1F, 0x00, 0x42, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x42, 0x00, 0x00, 0xF0, 0x42, 0x00, 0x00, 0x80, 0x3F, 0x00, 
+				0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00, 0x01, 
+				0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+			};
+			
+			file.Write(defaultNavMesh, 205, 1);
+			delete file;
+		}
+		
+		return true;
+	}
+	
+	return false;
 } 
