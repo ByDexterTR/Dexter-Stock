@@ -1312,26 +1312,26 @@ stock int TeamGetScore(int index)
 stock int Team_GetEdict(int index)
 {
 	static int teams[MAX_TEAMS] = { INVALID_ENT_REFERENCE, ... };
-
+	
 	if (index < 0 || index > MAX_TEAMS) {
 		return -1;
 	}
-
+	
 	int edict = teams[index];
-	if (IsValidEntity(edict)) 
+	if (IsValidEntity(edict))
 	{
 		return edict;
 	}
-
+	
 	bool foundTeamManager = false;
-
+	
 	int maxEntities = GetMaxEntities();
-	for (int entity=MaxClients+1; entity < maxEntities; entity++) {
-
+	for (int entity = MaxClients + 1; entity < maxEntities; entity++) {
+		
 		if (!IsValidEntity(entity)) {
 			continue;
 		}
-
+		
 		if (Entity_ClassNameMatches(entity, "team_manager", true)) {
 			foundTeamManager = true;
 		}
@@ -1342,18 +1342,18 @@ stock int Team_GetEdict(int index)
 		else {
 			continue;
 		}
-
+		
 		int num = Team_EdictGetNum(entity);
-
+		
 		if (num >= 0 && num <= MAX_TEAMS) {
 			teams[num] = EntIndexToEntRef(entity);
 		}
-
+		
 		if (num == index) {
 			return entity;
 		}
 	}
-
+	
 	return -1;
 }
 
@@ -1630,6 +1630,10 @@ stock void Zephstore_GiveCredits(int client, int kredi)
 	}
 }
 
+/*
+	Klasör kontrolü ve oluşturma
+*/
+
 stock bool DirExistsEx(const char[] path)
 {
 	if (!DirExists(path))
@@ -1694,15 +1698,27 @@ stock any MaxValue(any value, any max)
 	return (value > max) ? max : value;
 }
 
+/*
+	Oyuncunun fovunu çekme
+*/
+
 stock int GetFov(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_iFOV");
 }
 
+/*
+	Oyuncunun fovunu ayarlama
+*/
+
 stock void SetFov(int client, int fov)
 {
 	SetEntProp(client, Prop_Send, "m_iFOV", fov);
 }
+
+/*
+	Haritaya otomatik nav
+*/
 
 stock bool WriteNavMesh(const char[] map, bool skipExistsCheck = false)
 {
@@ -1739,4 +1755,20 @@ stock bool WriteNavMesh(const char[] map, bool skipExistsCheck = false)
 	}
 	
 	return false;
+}
+
+/* 
+	Hızlı entity classname karşılaştırma	
+*/
+
+stock bool Entity_ClassNameMatches(int entity, const char[] className, bool partialMatch = false)
+{
+	char entity_className[64];
+	Entity_GetClassName(entity, entity_className, sizeof(entity_className));
+	
+	if (partialMatch) {
+		return (StrContains(entity_className, className) != -1);
+	}
+	
+	return StrEqual(entity_className, className);
 } 
