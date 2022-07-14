@@ -1309,6 +1309,58 @@ stock int TeamGetScore(int index)
 	return GetEntProp(edict, Prop_Send, "m_iScore");
 }
 
+stock int Team_GetEdict(int index)
+{
+	static int teams[MAX_TEAMS] = { INVALID_ENT_REFERENCE, ... };
+
+	if (index < 0 || index > MAX_TEAMS) {
+		return -1;
+	}
+
+	int edict = teams[index];
+	if (IsValidEntity(edict)) 
+	{
+		return edict;
+	}
+
+	bool foundTeamManager = false;
+
+	int maxEntities = GetMaxEntities();
+	for (int entity=MaxClients+1; entity < maxEntities; entity++) {
+
+		if (!IsValidEntity(entity)) {
+			continue;
+		}
+
+		if (Entity_ClassNameMatches(entity, "team_manager", true)) {
+			foundTeamManager = true;
+		}
+		// Do not continue when no team managers are found anymore (for optimization)
+		else if (foundTeamManager) {
+			return -1;
+		}
+		else {
+			continue;
+		}
+
+		int num = Team_EdictGetNum(entity);
+
+		if (num >= 0 && num <= MAX_TEAMS) {
+			teams[num] = EntIndexToEntRef(entity);
+		}
+
+		if (num == index) {
+			return entity;
+		}
+	}
+
+	return -1;
+}
+
+stock int Team_EdictGetNum(int edict)
+{
+	return GetEntProp(edict, Prop_Send, "m_iTeamNum");
+}
 /* Takımın skorunu ayarlar
 
 */
