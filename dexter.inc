@@ -3,69 +3,32 @@
 #endif
 #define _dexter_included
 
-#define MAX_MESSAGE_LENGTH 		250
+#tryinclude <sourcemod>
+#tryinclude <sdkhooks>
+#tryinclude <sdktools>
+#tryinclude <cstrike>
 
-#define MAX_TEAMS 				32
-#define MAX_TEAM_NAME_LENGTH	32
-
-#define MAX_WEAPON_OFFSET		64
-#define MAX_WEAPON_SLOTS		6
-#define MAX_WEAPON_POSITIONS	20
-#define MAX_WEAPONS				48
-
-#define WEAPON_NOCLIP			-1
-
-#define MAX_AMMO_TYPES			32
-#define MAX_AMMO_SLOTS 			32
-
-#define MAX_WEAPON_STING		80
-#define MAX_WEAPON_PREFIX		16
-#define MAX_WEAPON_AMMO_NAME	32
-
-#define MAX_EDICTS      2048
-#define MAX_ENTITIES    4096
-
-#define CVAR_LENGTH 128
-
-#define MAX_CVARS 128
-
-#define HIDEHUD_WEAPONSELECTION     (1 << 0)
-#define HIDEHUD_FLASHLIGHT          (1 << 1)
-#define HIDEHUD_ALL                 (1 << 2)
-#define HIDEHUD_HEALTH              (1 << 3)	
-#define HIDEHUD_PLAYERDEAD          (1 << 4)
-#define HIDEHUD_NEEDSUIT            (1 << 5)
-#define HIDEHUD_MISCSTATUS          (1 << 6)
-#define HIDEHUD_CHAT                (1 << 7)
-#define HIDEHUD_CROSSHAIR           (1 << 8)
-#define HIDEHUD_VEHICLE_CROSSHAIR   (1 << 9)
-#define HIDEHUD_INVEHICLE           (1 << 10)
-#define HIDEHUD_BONUS_PROGRESS      (1 << 11)
-#define HIDEHUD_BITCOUNT            12
+#define LoopClientsValid(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1))
+#define LoopClientsValidT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1) && GetClientTeam(%1) == 2)
+#define LoopClientsValidCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1) && GetClientTeam(%1) == 3)
 
 #define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
-#define LoopClientsT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == CS_TEAM_T)
-#define LoopClientsCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == CS_TEAM_CT)
-#define LoopClientsValid(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1))
+#define LoopClientsT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == 2)
+#define LoopClientsCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && GetClientTeam(%1) == 3)
+
 #define LoopClientsNoBots(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsFakeClient(%1))
-#define LoopClientsNoBotsT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == CS_TEAM_T)
-#define LoopClientsNoBotsCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == CS_TEAM_CT)
+#define LoopClientsNoBotsT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == 2)
+#define LoopClientsNoBotsCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == 3)
+
 #define LoopClientsOnlyAlive(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && IsPlayerAlive(%1))
+#define LoopClientsOnlyAliveT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && IsPlayerAlive(%1) && GetClientTeam(%1) == 2)
+#define LoopClientsOnlyAliveCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && IsPlayerAlive(%1) && GetClientTeam(%1) == 3)
+
 #define LoopClientsOnlyDead(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsPlayerAlive(%1))
+#define LoopClientsOnlyDeadT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsPlayerAlive(%1) && GetClientTeam(%1) == 2)
+#define LoopClientsOnlyDeadCT(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1) && !IsPlayerAlive(%1) && GetClientTeam(%1) == 3)
 
-#include <sourcemod>
-#include <sdktools>
-#include <cstrike>
-#include <sdkhooks>
-
-/*
- Kullanıcı valid mi diye kontrol eder
-
- Example:
- if (IsValidClient(client, true)
-*/
-
-stock bool IsValidClient(int client, bool nobots = true)
+stock bool IsValidClient(int client, bool nobots = true, bool onlyalive = false)
 {
 	if (client <= 0 || client > MaxClients || !IsClientConnected(client) || (nobots && IsFakeClient(client)))
 	{
@@ -73,13 +36,6 @@ stock bool IsValidClient(int client, bool nobots = true)
 	}
 	return IsClientInGame(client);
 }
-
-/*
- Entity valid mi diye kontrol eder
-
- Example:
- if (IsValidEnt(ent))
-*/
 
 stock bool IsValidEnt(int ent)
 {
@@ -90,22 +46,7 @@ stock bool IsValidEnt(int ent)
 	return true;
 }
 
-/*
- Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
-
- Example:
-	ConVar Test = null;
-	
-	public void OnPluginStart()
-	{
-	    Test = CreateConVar("sm_flag", "b", "Yetki Harfi");
-	}
-	char Flag[8];
-	Test.GetString(Flag, sizeof(Flag));
-	if CheckAdminFlag(client, Flag)
-*/
-
-stock bool CheckAdminFlag(int client, const char[] flags) // Z harfi otomatik erişim verir
+stock bool CheckAdminFlag(int client, const char[] flags)
 {
 	int iCount = 0;
 	char sflagNeed[22][8], sflagFormat[64];
@@ -124,22 +65,7 @@ stock bool CheckAdminFlag(int client, const char[] flags) // Z harfi otomatik er
 	return bEntitled;
 }
 
-/*
- Kullanıcının belirlenen harfe erişimi var mı diye kontrol eder
-
- Example:
-	ConVar Test = null;
-	
-	public void OnPluginStart()
-	{
-	    Test = CreateConVar("sm_flag", "z", "Yetki Harfi");
-	}
-	char Flag[8];
-	Test.GetString(Flag, sizeof(Flag));
-	if CheckAdminFlagEx(client, Flag)
-*/
-
-stock bool CheckAdminFlagEx(int client, const char[] flags) // Z harfine otomatik erişim vermez
+stock bool CheckAdminFlagEx(int client, const char[] flags)
 {
 	int iCount = 0;
 	char sflagNeed[22][8], sflagFormat[64];
@@ -158,12 +84,6 @@ stock bool CheckAdminFlagEx(int client, const char[] flags) // Z harfine otomati
 	return bEntitled;
 }
 
-/* Admin olduğunu kontrol etme
-
- Example:
- if (IsPlayerGenericAdmin(client))
-*/
-
 stock bool IsPlayerGenericAdmin(int client)
 {
 	if ((GetAdminFlag(GetUserAdmin(client), Admin_Generic)))
@@ -172,12 +92,6 @@ stock bool IsPlayerGenericAdmin(int client)
 	}
 	return false;
 }
-
-/* Her hangi bir yetkiye sahip olup olmadığını kontrol etme
-
- Example:
- if (IsPlayerAnyAdmin(client))
-*/
 
 stock bool IsPlayerAnyAdmin(int client)
 {
@@ -188,11 +102,6 @@ stock bool IsPlayerAnyAdmin(int client)
 	return false;
 }
 
-/* Oyuncu o bayrağa sahip mi diye kontrol eder
- 
- if (IsAdminFlags(client))
-*/
-
 stock bool IsAdminFlags(int client, int flags = ADMFLAG_GENERIC)
 {
 	AdminId adminId = GetUserAdmin(client);
@@ -201,13 +110,6 @@ stock bool IsAdminFlags(int client, int flags = ADMFLAG_GENERIC)
 	}
 	return GetAdminFlags(adminId, Access_Effective) & flags == flags;
 }
-
-/*
- Gelişmiş bir şekilde silah vermeye yarar, verilen silahın şarjör ve mermisi ayarlanabilir
-
- Example:
- GivePlayerItemAmmo(client, "weapon_deagle", 1, 0);
-*/
 
 stock int GivePlayerItemAmmo(int client, const char[] weapon, int clip = -1, int ammo = -1)
 {
@@ -239,16 +141,9 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 	}
 }
 
-/*
- Kullanıcının silahlarını siler
-
- Example:
- ClearWeapon(client);
-*/
-
 stock void ClearWeapon(int client)
 {
-	for (int j = 0; j < 12; j++)
+	for (int j = 0; j < 13; j++)
 	{
 		int weapon = GetPlayerWeaponSlot(client, j);
 		if (weapon != -1)
@@ -259,17 +154,10 @@ stock void ClearWeapon(int client)
 	}
 }
 
-/*
- Kullanıcının silahlarını siler
-
- Example:
- ClearWeaponEx(client);
-*/
-
 stock void ClearWeaponEx(int client)
 {
 	int wepIdx;
-	for (int i; i < 12; i++)
+	for (int i; i < 13; i++)
 	{
 		while ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1)
 		{
@@ -278,13 +166,6 @@ stock void ClearWeaponEx(int client)
 		}
 	}
 }
-
-/*
- ConVar değişikliği yapar
-
- Example:
- SetCvar("mp_roundtime", 60);
-*/
 
 stock void SetCvar(char[] cvarName, int value)
 {
@@ -298,13 +179,6 @@ stock void SetCvar(char[] cvarName, int value)
 	IntCvar.Flags = flags;
 }
 
-/*
- ConVar değişikliği yapar
-
- Example:
- SetCvar("mp_roundtime", 60.0);
-*/
-
 stock void SetCvarFloat(char[] cvarName, float value)
 {
 	ConVar FloatCvar = FindConVar(cvarName);
@@ -316,13 +190,6 @@ stock void SetCvarFloat(char[] cvarName, float value)
 	flags |= FCVAR_NOTIFY;
 	FloatCvar.Flags = flags;
 }
-
-/*
- ConVar değişikliği yapar
-
- Example:
- SetCvar("mp_roundtime", "60");
-*/
 
 stock void SetCvarString(char[] cvarName, char[] value)
 {
@@ -336,13 +203,6 @@ stock void SetCvarString(char[] cvarName, char[] value)
 	StringCvar.Flags = flags;
 }
 
-/*
- Bir timer hızlı bir şekilde durdurmaya yarar
-
- Example:
- StopTimer(timer);
-*/
-
 stock void StopTimer(Handle &timer)
 {
 	if (timer != null)
@@ -351,13 +211,6 @@ stock void StopTimer(Handle &timer)
 		timer = null;
 	}
 }
-
-/*
- Kullanıcının ekranını renklendirir
-
- Example:
- ScreenColor(client, Color);
-*/
 
 stock void ScreenColor(int client, int Color[4])
 {
@@ -372,14 +225,7 @@ stock void ScreenColor(int client, int Color[4])
 	EndMessage();
 }
 
-/*
- Kullanıcının açıkta duran menüsünü kapatır
-
- Example:
- CloseClientMenu(client);
-*/
-
-stock int CloseClientMenu(int client) // Oyuncuların mevcutta açık olan menüsünü iptal ettirmeye yarar.
+stock int CloseClientMenu(int client)
 {
 	Menu Menu_CCM = new Menu(ClientMenu_Close);
 	Menu_CCM.SetTitle("^-^ -_- ^-^");
@@ -394,24 +240,10 @@ public int ClientMenu_Close(Menu Menu_CCM, MenuAction action, int Client, int Cl
 	}
 }
 
-/*
- Kullanıcının hızını arttırır, hızı arttırmak oyuncunun gravitysinide bozar!
-
- Example:
- SetEntitySpeed(client, 3.1);
-*/
-
 stock void SetEntitySpeed(int entity, float speed = 1.0)
 {
 	SetEntPropFloat(entity, Prop_Data, "m_flLaggedMovementValue", speed);
 }
-
-/*
- Kullanıcının god modunu değiştirir
-
- Example:
- SetClientGod(client, false);
-*/
 
 stock void SetClientGod(int client, bool god)
 {
@@ -420,13 +252,6 @@ stock void SetClientGod(int client, bool god)
 	else
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 }
-
-/*
- Kullanıcıların armorlarını kaldırır
-
- Example:
- ResetArmor(client)
-*/
 
 stock void ResetArmor(int client)
 {
@@ -442,13 +267,6 @@ stock void ResetArmor(int client)
 	}
 }
 
-/*
- Kullanıcıların armor değerini değiştirir
-
- Example:
- SetClientArmor(client, 31);
-*/
-
 stock void SetClientArmor(int client, int amount)
 {
 	if (IsClientValid(client))
@@ -459,13 +277,6 @@ stock void SetClientArmor(int client, int amount)
 			SetEntProp(client, Prop_Data, "m_ArmorValue", amount, 4);
 	}
 }
-
-/*
- Kullanıcıların kasklarını alır / verir
-
- Example:
- SetClientHelmet(client, true);
-*/
 
 stock void SetClientHelmet(int client, bool value)
 {
@@ -478,13 +289,6 @@ stock void SetClientHelmet(int client, bool value)
 	}
 }
 
-/*
- Bir ses dosyasını precache alıp indirme listesine ekler tek satırda
-
- Example:
- PrecacheSoundAnyDownload("bydexter/test/sound.mp3");
-*/
-
 stock void PrecacheSoundAnyDownload(const char[] sSound)
 {
 	char sBuffer[256];
@@ -492,13 +296,6 @@ stock void PrecacheSoundAnyDownload(const char[] sSound)
 	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
 	AddFileToDownloadsTable(sBuffer);
 }
-
-/*
- Bir materyal dosyasını precache alıp indirme listesine ekler tek satırda
-
- Example:
- PrecacheDecalAnyDownload("bydexter/test/decal");
-*/
 
 stock void PrecacheDecalAnyDownload(char[] sOverlay)
 {
@@ -514,22 +311,10 @@ stock void PrecacheDecalAnyDownload(char[] sOverlay)
 	AddFileToDownloadsTable(sBuffer);
 }
 
-/*
- Isınma turunu kontrol eder
-
- Example:
- if (InWarmup)
- PrintToChatAll("Isınma devam ediyor!");
-*/
-
 stock bool InWarmup()
 {
 	return GameRules_GetProp("m_bWarmupPeriod") != 0;
 }
-
-/*
- Isınma turunu başlatır
-*/
 
 stock void StartWarmup(int IsinmaSure = 60)
 {
@@ -538,126 +323,54 @@ stock void StartWarmup(int IsinmaSure = 60)
 	ServerCommand("mp_warmup_start");
 }
 
-/*
- Isınma turunu bitirir
-*/
-
 stock void EndWarmup()
 {
 	ServerCommand("mp_warmup_end");
 }
-
-/*
- Isınma turunu kontrol eder
-
- Example:
- if (InWarmup)
- PrintToChatAll("Mola devam ediyor!");
-*/
 
 stock bool InPaused()
 {
 	return GameRules_GetProp("m_bMatchWaitingForResume") != 0;
 }
 
-/*
- Molayı bitirir
-*/
-
 stock void ValvePause()
 {
 	ServerCommand("mp_pause_match");
 }
-
-/*
- Mola başlatır
-*/
 
 stock void ValveUnpause()
 {
 	ServerCommand("mp_unpause_match");
 }
 
-/*
- Kullanıcıya overlay gösterir
-
- Example:
- ShowOverlayToClient(client, "dexter/overlay/test");
-*/
-
-stock void ShowOverlayToClient(int client, const char[] overlaypath, float life = 0.0)
+stock void ShowOverlayToClient(int client, const char[] overlaypath)
 {
 	ClientCommand(client, "r_screenoverlay \"%s\"", overlaypath);
-	CreateTimer(lifetime, DeleteOverlay, GetClientUserId(i));
 }
 
-/*
- Kullanıcılara overlay gösterir
-
- Example:
- ShowOverlayToAll("dexter/overlay/test");
-*/
-
-stock void ShowOverlayToAll(const char[] overlaypath, float life = 0.0)
+stock void ShowOverlayToAll(const char[] overlaypath)
 {
 	for (int x = 1; x <= MaxClients; x++)
 	{
 		if (IsValidClient(x, false, true))
 		{
-			ShowOverlayToClient(x, overlaypath, life);
+			ShowOverlayToClient(x, overlaypath);
 		}
 	}
 }
 
-/*
- Kullanıcılara gösterlen overlayı siler
-
- Example:
- DeleteOverlay(client);
-*/
-
-stock Action DeleteOverlay(Handle timer, int userid)
+stock void DeleteOverlay(int client)
 {
-	int client = GetClientOfUserId(userid);
-	
-	if (!IsValidClient(client))
-		return Plugin_Stop;
-	
 	ClientCommand(client, "r_screenoverlay \"\"");
-	
-	return Plugin_Stop;
 }
 
-/*
- Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
-
- Example:
- BlockEntity(client, g_CollisionGroup);
-*/
-
-stock void BlockEntity(int client, int cachedOffset)
+stock void BlockEntity(int client, bool solid = true)
 {
-	SetEntProp(client, Prop_Data, "m_CollisionGroup", 5);
+	if (solid)
+		SetEntProp(client, Prop_Data, "m_CollisionGroup", 5);
+	else
+		SetEntProp(client, Prop_Data, "m_CollisionGroup", 2);
 }
-
-/*
- Kullanıcıların CollisionGroup (İç içe geçme) olayını değiştirir
-
- Example:
- UnblockEntity(client);
-*/
-
-stock void UnblockEntity(int client)
-{
-	SetEntProp(client, Prop_Data, "m_CollisionGroup", 2);
-}
-
-/*
- Yerdeki silahları temizler
-
- Example:
- YerdekiSilahlariSil();
-*/
 
 stock void GroundWeaponClear()
 {
@@ -668,54 +381,28 @@ stock void GroundWeaponClear()
 	{
 		if (IsValidEdict(i) && IsValidEntity(i))
 		{
-			GetEdictClassname(i, weapon, sizeof(weapon));
+			GetEntityClassname(i, weapon, sizeof(weapon));
 			if ((StrContains(weapon, "weapon_") != -1 || StrContains(weapon, "item_") != -1) && GetEntDataEnt2(i, g_WeaponParent) == -1)
-				RemoveEdict(i);
+				RemoveEntity(i);
 		}
 	}
 }
 
-/*
- Modelleri kaydeder quantum güncelle artık abiiiii
-
- Example:
- Handle g_Model;
- public void OnPluginStart()
- {
-	g_Model = RegClientCookie("cookiezımbırtısı", "Oyuncuların modellerinin saklandığı cookie", CookieAccess_Protected);
- }
- ModelKaydet(client);
-*/
-
 stock void ModelKaydet(int client)
 {
-	char PlayerModel[PLATFORM_MAX_PATH];
+	char PlayerModel[256];
 	GetClientModel(client, PlayerModel, sizeof(PlayerModel));
 	SetClientCookie(client, g_Model, PlayerModel);
 }
 
-/*
- Kaydedilen modelleri verir.
-
- Example:
- ModelVer(client);
-*/
-
 stock void ModelVer(int client)
 {
-	char PlayerModel[PLATFORM_MAX_PATH];
+	char PlayerModel[256];
 	GetClientCookie(client, g_Model, PlayerModel, sizeof(PlayerModel));
 	SetEntityModel(client, PlayerModel);
 }
 
-/*
- Ekran titretme
-
- Example:
- EkranTitreme(client, 5.0, 9000.0, 7.0, 40.0);
-*/
-
-stock void EkranTitreme(int client, float Amplitude, float Radius, float Duration, float Frequency)
+stock void ScrenShake(int client, float Amplitude, float Radius, float Duration, float Frequency)
 {
 	float ClientOrigin[3];
 	int Ent = CreateEntityByName("env_shake");
@@ -734,12 +421,6 @@ stock void EkranTitreme(int client, float Amplitude, float Radius, float Duratio
 		TeleportEntity(Ent, ClientOrigin, NULL_VECTOR, NULL_VECTOR);
 	}
 }
-
-/* Sunucu Otomatik zıplama ayarlama
-
- Example:
- BunnyAyarla(true);
-*/
 
 stock void BunnyAyarla(bool Durum)
 {
@@ -764,12 +445,6 @@ stock void BunnyAyarla(bool Durum)
 		SetCvar("sv_staminarecoveryrate", 60);
 	}
 }
-
-/* Silah Tepmesini ayarlama
-
- Example:
- SekmemeAyarla(true);
-*/
 
 stock void SekmemeAyarla(bool Durum)
 {
@@ -797,12 +472,6 @@ stock void SekmemeAyarla(bool Durum)
 	}
 }
 
-/* Dost Ateşi ayarlama
-
- Example:
- FFAyarla(true);
-*/
-
 stock void FFAyarla(bool Durum)
 {
 	if (Durum)
@@ -816,12 +485,6 @@ stock void FFAyarla(bool Durum)
 		SetCvar("mp_friendlyfire", 0);
 	}
 }
-
-/* Lazer çekme
-
- Example:
- DrawLaser("BulletBeam", startX, startY, startZ, endX, endY, endZ, "255 0 128");
-*/
 
 stock bool DrawLaser(char[] name, float startX, float startY, float startZ, float endX, float endY, float endZ, char[] color)
 {
@@ -860,12 +523,6 @@ stock bool DrawLaser(char[] name, float startX, float startY, float startZ, floa
 	return false;
 }
 
-/* Kullanıcının duvara bakıp bakmadığını kontrol eder
-
- Example:
- if (IsLookingAtWall(client, 100.0))
-*/
-
 stock bool IsLookingAtWall(int client, float distance = 40.0) {
 	
 	float posEye[3], posEyeAngles[3];
@@ -902,13 +559,6 @@ public bool LookingWall_TraceEntityFilter(int entity, int contentsMask)
 {
 	return entity == 0;
 }
-//Üsttekiyle birleşik
-
-/* Özel Hasar verdirme
-
- Example:
- DealDamage(victim, 200, attacker, DMG_GENERIC, "weapon_awp");
-*/
 
 stock void DealDamage(int nClientVictim, int nDamage, int nClientAttacker = 0, int nDamageType = DMG_GENERIC, char sWeapon[] = "")
 {
@@ -942,14 +592,6 @@ stock void DealDamage(int nClientVictim, int nDamage, int nClientAttacker = 0, i
 	}
 }
 
-/*
- Rastgele bir oyuncu çeker
-
- Example:
- int XX = GetRandomPlayer(CS_TEAM_T, false);
- PrintToChatAll("[SM] Lucky Player: %N", XX);
-*/
-
 stock int GetRandomPlayer(int team = -1, bool OnlyAlive = false)
 {
 	int[] clients = new int[MaxClients];
@@ -964,12 +606,6 @@ stock int GetRandomPlayer(int team = -1, bool OnlyAlive = false)
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount - 1)];
 }
 
-/* T'de Yaşayan kontrol ettirmek
- 
- Example:
- int TAlive = GetAliveT();
-*/
-
 stock int GetAliveT()
 {
 	int Ts = 0;
@@ -983,12 +619,6 @@ stock int GetAliveT()
 	return Ts;
 }
 
-/* CT'de Yaşayan kontrol ettirmek
- 
- Example:
- int CTAlive = GetAliveCT();
-*/
-
 stock int GetAliveCT()
 {
 	int CTs = 0;
@@ -1001,12 +631,6 @@ stock int GetAliveCT()
 	}
 	return CTs;
 }
-
-/* Takımda Kaç kişi var
- 
- Example:
- int Player = GetCountTeam(2);
-*/
 
 stock int GetCountTeam(int team = -1)
 {
@@ -1024,13 +648,7 @@ stock int GetCountTeam(int team = -1)
 	return players;
 }
 
-/* Log dosyası belirleme
- 
- Example:
- SetLogFile(path, "Command", "Admin");
-*/
-
-stock void SetLogFile(char path[PLATFORM_MAX_PATH], char[] file, char[] folder)
+stock void SetLogFile(char path[256], char[] file, char[] folder)
 {
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
@@ -1039,33 +657,15 @@ stock void SetLogFile(char path[PLATFORM_MAX_PATH], char[] file, char[] folder)
 	BuildPath(Path_SM, path, sizeof(path), path);
 }
 
-/* Öldürme sayısı belirleme
-
- Example:
- SetClientFrags(client, 1);
-*/
-
 stock void SetClientFrags(int client, int val = 0)
 {
 	SetEntProp(client, Prop_Data, "m_iFrags", val);
 }
 
-/* Ölme sayısı belirleme
-
- Example:
- SetClientDeaths(client, 1);
-*/
-
 stock void SetClientDeaths(int client, int val = 0)
 {
 	SetEntProp(client, Prop_Data, "m_iDeaths", val);
 }
-
-/* Parayı belirleme
-
- Example:
- SetClientMoney(client, 16000);
-*/
 
 stock void SetClientMoney(int client, int val = 800)
 {
@@ -1174,12 +774,6 @@ stock void StringToUpper(const char[] input, char[] output, int size)
 	output[x] = '\0';
 }
 
-/* Kullanıcı merdivende mi diye kontrol eder
-
- Example:
- if (IsOnLadder(client))
-*/
-
 stock bool IsOnLadder(int client)
 {
 	MoveType movetype = GetEntityMoveType(client);
@@ -1191,12 +785,6 @@ stock bool IsOnLadder(int client)
 		return false;
 	}
 }
-
-/* Oyuncunun koşunmasını düzeltir
-
- Example:
- UnMute(client);
-*/
 
 stock void UnMute(int client)
 {
@@ -1222,40 +810,20 @@ stock void UnMute(int client)
 	}
 }
 
-/* Oyuncunun susturur
-
- Example:
- Mute(client);
-*/
-
 stock void Mute(int client)
 {
 	SetClientListeningFlags(client, VOICE_MUTED);
 }
-
-/* Oyuncu susturulmuş mu diye kontrol eder
-
- Example:
- if (IsMuted(client))
-*/
 
 stock bool IsMuted(int client)
 {
 	return GetClientListeningFlags(client) & VOICE_MUTED > 0;
 }
 
-/*
- ConVar'ın flagını kontrol eder
-*/
-
 stock bool ConVar_HasFlags(ConVar convar, int flags)
 {
 	return convar.Flags & flags > 0;
 }
-
-/*
- ConVar'ın flagını ayarlar
-*/
 
 stock void ConVar_AddFlags(ConVar convar, int flags)
 {
@@ -1264,22 +832,12 @@ stock void ConVar_AddFlags(ConVar convar, int flags)
 	convar.Flags = newFlags;
 }
 
-/*
- ConVar'ın flagını siler
-*/
-
 stock void ConVar_RemoveFlags(ConVar convar, int flags)
 {
 	int newFlags = convar.Flags;
 	newFlags &= ~flags;
 	convar.Flags = newFlags;
 }
-
-/* Takımın ismini değiştirir
-
- Example:
- TeamSetName(2, "Eternal Fire");
-*/
 
 stock bool TeamSetName(int index, const char[] name)
 {
@@ -1295,9 +853,6 @@ stock bool TeamSetName(int index, const char[] name)
 	return true;
 }
 
-/* Takımın skorunu çeker
-
-*/
 stock int TeamGetScore(int index)
 {
 	int edict = Team_GetEdict(index);
@@ -1308,62 +863,6 @@ stock int TeamGetScore(int index)
 	
 	return GetEntProp(edict, Prop_Send, "m_iScore");
 }
-
-stock int Team_GetEdict(int index)
-{
-	static int teams[MAX_TEAMS] = { INVALID_ENT_REFERENCE, ... };
-	
-	if (index < 0 || index > MAX_TEAMS) {
-		return -1;
-	}
-	
-	int edict = teams[index];
-	if (IsValidEntity(edict))
-	{
-		return edict;
-	}
-	
-	bool foundTeamManager = false;
-	
-	int maxEntities = GetMaxEntities();
-	for (int entity = MaxClients + 1; entity < maxEntities; entity++) {
-		
-		if (!IsValidEntity(entity)) {
-			continue;
-		}
-		
-		if (Entity_ClassNameMatches(entity, "team_manager", true)) {
-			foundTeamManager = true;
-		}
-		// Do not continue when no team managers are found anymore (for optimization)
-		else if (foundTeamManager) {
-			return -1;
-		}
-		else {
-			continue;
-		}
-		
-		int num = Team_EdictGetNum(entity);
-		
-		if (num >= 0 && num <= MAX_TEAMS) {
-			teams[num] = EntIndexToEntRef(entity);
-		}
-		
-		if (num == index) {
-			return entity;
-		}
-	}
-	
-	return -1;
-}
-
-stock int Team_EdictGetNum(int edict)
-{
-	return GetEntProp(edict, Prop_Send, "m_iTeamNum");
-}
-/* Takımın skorunu ayarlar
-
-*/
 
 stock bool TeamSetScore(int index, int score)
 {
@@ -1425,22 +924,12 @@ stock bool GetMenuBool(Menu menu, int param2)
 	return GetMenuInt(menu, param2) != 0;
 }
 
-/*
- Kurabiyeleri int değerinde vermek için
- SetCookieInt(client, g_cookie, 3);
-*/
-
 stock void SetCookieInt(int client, Handle cookie, int value)
 {
 	char buffer[MAX_INTEGER_STRING_LENGTH];
 	FormatEx(buffer, sizeof(buffer), "%d", value);
 	SetClientCookie(client, cookie, buffer);
 }
-
-/*
- Kurabiyeleri int değerinde çekmek için
- GetCookieInt(client, g_cookie, 0);
-*/
 
 stock int GetCookieInt(int client, Handle cookie, int defaultValue = 0)
 {
@@ -1453,22 +942,12 @@ stock int GetCookieInt(int client, Handle cookie, int defaultValue = 0)
 	return StringToInt(buffer);
 }
 
-/*
- Kurabiyeleri Float değerinde vermek için
- SetCookieFloat(client, g_cookie, 1.0);
-*/
-
 stock void SetCookieFloat(int client, Handle cookie, float value)
 {
 	char buffer[MAX_FLOAT_STRING_LENGTH];
 	FormatEx(buffer, sizeof(buffer), "%f", value);
 	SetClientCookie(client, cookie, buffer);
 }
-
-/*
- Kurabiyeleri Float değerinde çekmek için
- GetCookieFloat(client, g_cookie, 0.0);
-*/
 
 stock float GetCookieFloat(int client, Handle cookie, float defaultValue = 0.0)
 {
@@ -1481,14 +960,9 @@ stock float GetCookieFloat(int client, Handle cookie, float defaultValue = 0.0)
 	return StringToFloat(buffer);
 }
 
-/*
- Hızlı Precache ve download modeller için
- PrecacheAndMaterialDownloader("weapons/ByDexter/knife/garen-sword/v_knife");
-*/
-
 stock void PrecacheAndModelDownloader(char[] sModelname)
 {
-	char sBuffer[PLATFORM_MAX_PATH];
+	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "models/%s.dx90.vtx", sModelname);
 	AddFileToDownloadsTable(sBuffer);
 	Format(sBuffer, sizeof(sBuffer), "models/%s.mdl", sModelname);
@@ -1500,14 +974,9 @@ stock void PrecacheAndModelDownloader(char[] sModelname)
 	AddFileToDownloadsTable(sBuffer);
 }
 
-/*
- Hızlı Precache ve download phy dosyası olmayan modeller için
- PrecacheAndMaterialDownloader("weapons/ByDexter/knife/garen-sword/v_knife");
-*/
-
 stock void PrecacheAndModelDownloaderEx(char[] sModelname)
 {
-	char sBuffer[PLATFORM_MAX_PATH];
+	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "models/%s.dx90.vtx", sModelname);
 	AddFileToDownloadsTable(sBuffer);
 	Format(sBuffer, sizeof(sBuffer), "models/%s.mdl", sModelname);
@@ -1517,34 +986,14 @@ stock void PrecacheAndModelDownloaderEx(char[] sModelname)
 	AddFileToDownloadsTable(sBuffer);
 }
 
-/*
- Hızlı Precache ve download materyal için
- PrecacheAndMaterialDownloader("models/ByDexter/weapons/knife/garen-sword/sword");
-*/
-
 stock void PrecacheAndMaterialDownloader(char[] sMaterialname)
 {
-	char sBuffer[PLATFORM_MAX_PATH];
+	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", sMaterialname);
 	AddFileToDownloadsTable(sBuffer);
 	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", sMaterialname);
 	AddFileToDownloadsTable(sBuffer);
 }
-
-/*
- Harita ışığını değiştirme
-
- 0 -> Normal
- 1 -> Simsiyah
- 2 -> Karanlık
- 3 -> Karamsar
- 4 -> Aydınlık
- 
- public void OnMapStart()
- {
- 	LightChange(0);
- }
-*/
 
 stock void LightChange(int Seviye = 0)
 {
@@ -1556,15 +1005,9 @@ stock void LightChange(int Seviye = 0)
 		SetLightStyle(0, "b");
 	else if (Seviye == 3)
 		SetLightStyle(0, "c");
-	else
-		SetLightStyle(0, "z");
 }
 
-/*
- Oyuncuların ekranına hud gönderir
-*/
-
-stock void ShowStatusMessage(int client = -1, const char[] message = NULL_STRING, int hold = 1)
+stock void ShowStatusMessage(int client, const char[] message, int hold = 1)
 {
 	Event show_survival_respawn_status = CreateEvent("show_survival_respawn_status");
 	if (show_survival_respawn_status != null)
@@ -1572,25 +1015,12 @@ stock void ShowStatusMessage(int client = -1, const char[] message = NULL_STRING
 		show_survival_respawn_status.SetString("loc_token", message);
 		show_survival_respawn_status.SetInt("duration", hold);
 		show_survival_respawn_status.SetInt("userid", -1);
-		if (client == -1)
-		{
-			LoopClientsNoBots(player)
-			{
-				show_survival_respawn_status.FireToClient(player);
-			}
-		}
-		else
-		{
-			if (!IsFakeClient(client))
-				show_survival_respawn_status.FireToClient(client);
-		}
+		if (!IsFakeClient(client))
+			show_survival_respawn_status.FireToClient(client);
+		
 		show_survival_respawn_status.Cancel();
 	}
 }
-
-/*
- Oyuncuya komut uygulatma, yetkisiz ise yetkililere ait bir komutuda gönderebilir.
-*/
 
 stock void ExecuteCommand(int client, const char[] command)
 {
@@ -1605,10 +1035,6 @@ stock void ExecuteCommand(int client, const char[] command)
 		SetUserAdmin(client, Group);
 	}
 }
-
-/*
- Oyuncunun kredisini alıp verme
-*/
 
 stock void Zephstore_GiveCredits(int client, int kredi)
 {
@@ -1628,147 +1054,4 @@ stock void Zephstore_GiveCredits(int client, int kredi)
 			PrintToServer("Kredi verme komutu bulunamadı.");
 		}
 	}
-}
-
-/*
-	Klasör kontrolü ve oluşturma
-*/
-
-stock bool DirExistsEx(const char[] path)
-{
-	if (!DirExists(path))
-	{
-		CreateDirectory(path, 511);
-		
-		if (!DirExists(path))
-		{
-			LogError("Couldn't create folder! (%s)", path);
-			return false;
-		}
-	}
-	
-	return true;
-}
-
-stock bool IsConVarDefault(ConVar convar)
-{
-	char sDefaultVal[16], sCurrentVal[16];
-	GetConVarDefault(convar, sDefaultVal, sizeof(sDefaultVal));
-	GetConVarString(convar, sCurrentVal, sizeof(sCurrentVal));
-	
-	return StrEqual(sDefaultVal, sCurrentVal);
-}
-
-stock bool GetClientAbsVelocity(int client, float velocity[3])
-{
-	static int offset = -1;
-	
-	if (offset == -1 && (offset = FindDataMapInfo(client, "m_vecAbsVelocity")) == -1)
-	{
-		ZeroVector(velocity);
-		return false;
-	}
-	
-	GetEntDataVector(client, offset, velocity);
-	return true;
-}
-
-stock int GetClientHudFlags(int client)
-{
-	return GetEntProp(client, Prop_Send, "m_iHideHUD");
-}
-
-stock void ZeroVector(float vec[3])
-{
-	vec[0] = vec[1] = vec[2] = 0.0;
-}
-
-stock bool IsVectorZero(const float vec[3])
-{
-	return vec[0] == 0.0 && vec[1] == 0.0 && vec[2] == 0.0;
-}
-
-stock any MinValue(any value, any min)
-{
-	return (value < min) ? min : value;
-}
-
-stock any MaxValue(any value, any max)
-{
-	return (value > max) ? max : value;
-}
-
-/*
-	Oyuncunun fovunu çekme
-*/
-
-stock int GetFov(int client)
-{
-	return GetEntProp(client, Prop_Send, "m_iFOV");
-}
-
-/*
-	Oyuncunun fovunu ayarlama
-*/
-
-stock void SetFov(int client, int fov)
-{
-	SetEntProp(client, Prop_Send, "m_iFOV", fov);
-}
-
-/*
-	Haritaya otomatik nav
-*/
-
-stock bool WriteNavMesh(const char[] map, bool skipExistsCheck = false)
-{
-	char sTempMap[PLATFORM_MAX_PATH];
-	FormatEx(sTempMap, PLATFORM_MAX_PATH, "maps/%s.nav", map);
-	
-	if (skipExistsCheck || !FileExists(sTempMap))
-	{
-		File file = OpenFile(sTempMap, "wb");
-		
-		if (file != null)
-		{
-			static int defaultNavMesh[205] = {
-				0xCE, 0xFA, 0xED, 0xFE, 0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x58, 0xF6, 0x01, 0x00, 
-				0x01, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-				0x00, 0x80, 0xED, 0xC3, 0x00, 0x00, 0x48, 0x42, 0xFF, 0x1F, 0x00, 0x42, 0x00, 0x00, 0x48, 0xC2, 
-				0x00, 0x80, 0xED, 0x43, 0xFF, 0x1F, 0x00, 0x42, 0xFF, 0x1F, 0x00, 0x42, 0xFF, 0x1F, 0x00, 0x42, 
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-				0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0xE7, 0xC3, 0x00, 0x00, 0x7A, 0x42, 0xFF, 0x1F, 0x00, 
-				0x42, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7A, 0xC2, 0x00, 0x00, 0x7A, 0x42, 0xFF, 0x1F, 
-				0x00, 0x42, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7A, 0xC2, 0x00, 0x40, 0xE7, 0x43, 0xFF, 
-				0x1F, 0x00, 0x42, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x40, 0xE7, 0xC3, 0x00, 0x40, 0xE7, 0x43, 
-				0xFF, 0x1F, 0x00, 0x42, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-				0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x42, 0x00, 0x00, 0xF0, 0x42, 0x00, 0x00, 0x80, 0x3F, 0x00, 
-				0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x01, 0x00, 0x00, 0x00, 0x01, 
-				0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-			};
-			
-			file.Write(defaultNavMesh, 205, 1);
-			delete file;
-		}
-		
-		return true;
-	}
-	
-	return false;
-}
-
-/* 
-	Hızlı entity classname karşılaştırma	
-*/
-
-stock bool Entity_ClassNameMatches(int entity, const char[] className, bool partialMatch = false)
-{
-	char entity_className[64];
-	Entity_GetClassName(entity, entity_className, sizeof(entity_className));
-	
-	if (partialMatch) {
-		return (StrContains(entity_className, className) != -1);
-	}
-	
-	return StrEqual(entity_className, className);
 } 
